@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1081118442339",
+    "firebase_url": "https://lomba-1f6a1-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lomba-1f6a1",
+    "storage_bucket": "lomba-1f6a1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081118442339:android:806f91fcea15af2a0e0956",
+        "android_client_info": {
+          "package_name": "com.example.lomba"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTQXCEKFmGK9d2k7HE2sRSG8ZZY6VljPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081118442339:android:bd7e749816385b260e0956",
+        "android_client_info": {
+          "package_name": "com.example.lomba5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTQXCEKFmGK9d2k7HE2sRSG8ZZY6VljPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081118442339:android:6bfc1f7431500d890e0956",
+        "android_client_info": {
+          "package_name": "com.example.lomba6"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTQXCEKFmGK9d2k7HE2sRSG8ZZY6VljPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
