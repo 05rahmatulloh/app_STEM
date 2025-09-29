@@ -55,7 +55,7 @@ class ChatController extends GetxController {
         body: {
           "prompt": prompt.value,
           // "topic": topic.value,
-          "sessionId": idSession.value.toString(),
+          // "sessionId": idSession.value.toString(),
         },
       );
 
