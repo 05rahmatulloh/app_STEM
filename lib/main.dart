@@ -12,6 +12,8 @@ import 'package:lomba6/feature/home/controller/homepage.dart';
 import 'package:lomba6/feature/home/controller/snakebar.dart';
 import 'package:lomba6/feature/home/view/homepage.dart';
 import 'package:lomba6/firebase_options.dart';
+import 'package:lomba6/feature/chat/view/chat_view.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -65,7 +67,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: CekToken(),
+      home: ChatView(),
     );
   }
 }
