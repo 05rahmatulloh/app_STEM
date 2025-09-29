@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:lomba6/core/api.dart';
 import 'package:lomba6/feature/chat/models/chat_model.dart';
+import 'package:lomba6/feature/home/controller/homepage.dart';
 // import 'package:app_STEM/core/api.dart';
 
 /// ============ Komentar ============
@@ -17,6 +18,15 @@ class ChatController extends GetxController {
   RxList<ChatModel> chat = <ChatModel>[].obs;
   RxBool isLoading = false.obs;
   RxBool isTyping = false.obs;
+  final HomepageController home = Get.put(HomepageController());
+  late var dataaa;
+
+  @override
+  void onInit() {
+    super.onInit();
+    dataaa = home.dataperkandangasli;
+    print("Data dari Homepage: $dataaa");
+  }
 
   final String urlApiChat = api().baseApiChat;
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:lomba6/core/color.dart';
 import 'package:lomba6/core/widget.dart';
 import 'package:lomba6/feature/auth/controller/authController.dart';
+import 'package:lomba6/feature/chat/view/chat_view.dart';
 import 'package:lomba6/feature/home/controller/homepage.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_instance/get_instance.dart';
@@ -70,7 +72,7 @@ Container appbarr(BuildContext context) {
                       color: const Color.fromARGB(255, 0, 0, 0),
                       fontSize: 20,
                       fontFamily: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ).fontFamily,
                     ),
                   ),
@@ -80,7 +82,7 @@ Container appbarr(BuildContext context) {
                   Obx(() {
                     if (page.s.value == 1) {
                       return IconButton(
-                        icon: Icon(Icons.calendar_today),
+                        icon: Icon(Icons.calendar_today,color: Colors.black,),
                         onPressed: () {
                           home.dateicon.value = !home.dateicon.value;
                         },
@@ -90,7 +92,12 @@ Container appbarr(BuildContext context) {
                     return SizedBox();
                   }),
 
-                  SizedBox(width: 10),
+                  IconButton(
+                    icon: Icon(Icons.chat,color: Colors.black,),
+                    onPressed: () {
+                      Get.to(ChatView());
+                    },
+                  ),
                 ],
               ),
 

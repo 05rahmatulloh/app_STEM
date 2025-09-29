@@ -50,314 +50,304 @@ class ChatView extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  "Online",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white70,
-                    fontSize: 12,
-                  ),
-                ),
+                // Text(
+                //   "Online",
+                //   style: GoogleFonts.poppins(
+                //     color: Colors.white70,
+                //     fontSize: 12,
+                //   ),
+                // ),
               ],
             ),
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.more_vert, color: Colors.white),
+          //   onPressed: () {},
+          // ),
         ],
       ),
-      body: Column(
-        children: [
-          // Template Questions Section
-          Container(
-            height: 120,
-            color: Colors.white,
+      body:// Ganti body: Column di ChatView jadi seperti ini
+Column(
+  children: [
+    // Chat Messages Section
+    Expanded(
+      child: Obx(() {
+        if (controller.chat.isEmpty && !controller.isTyping.value) {
+          return Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    "Pertanyaan Template:",
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
-                    ),
+                Icon(
+                  Icons.chat_bubble_outline,
+                  size: 64,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "Mulai percakapan dengan AI Assistant",
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.grey[600],
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: templateQuestions.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: InkWell(
-                          onTap: () =>
-                              _sendTemplateQuestion(templateQuestions[index]),
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorApp().primery.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: colorApp().primery.withOpacity(0.3),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                templateQuestions[index],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: colorApp().primery,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                const SizedBox(height: 8),
+                Text(
+                  "Pilih pertanyaan template atau ketik sendiri",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey[500],
                   ),
                 ),
               ],
             ),
-          ),
-          const Divider(height: 1, color: Colors.grey),
+          );
+        }
 
-          // Chat Messages Section
-          Expanded(
-            child: Obx(() {
-              if (controller.chat.isEmpty && !controller.isTyping.value) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+
+        return ListView.builder(
+          controller: scrollController,
+          padding: const EdgeInsets.all(8),
+          itemCount:
+              controller.chat.length + (controller.isTyping.value ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == controller.chat.length &&
+                controller.isTyping.value) {
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(18),
+                      topRight: Radius.circular(18),
+                      bottomLeft: Radius.circular(4),
+                      bottomRight: Radius.circular(18),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.chat_bubble_outline,
-                        size: 64,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 16),
                       Text(
-                        "Mulai percakapan dengan AI Assistant",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Pilih pertanyaan template atau ketik sendiri",
+                        "AI sedang mengetik",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
-                          color: Colors.grey[500],
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            colorApp().primery,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                );
-              }
+                ),
+              );
+            }
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (scrollController.hasClients) {
-                  scrollController.animateTo(
-                    scrollController.position.maxScrollExtent,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-                }
-              });
+            final chat = controller.chat[index];
+            final isUser = chat.role == "user";
 
-              return ListView.builder(
-                controller: scrollController,
-                padding: const EdgeInsets.all(8),
-                itemCount:
-                    controller.chat.length +
-                    (controller.isTyping.value ? 1 : 0),
-                itemBuilder: (context, index) {
-                  // Show typing indicator at the end
-                  if (index == controller.chat.length &&
-                      controller.isTyping.value) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(18),
-                            topRight: Radius.circular(18),
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(18),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 2,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "AI sedang mengetik",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  colorApp().primery,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              alignment:
+                  isUser ? Alignment.centerRight : Alignment.centerLeft,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.75,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: isUser ? colorApp().primery : Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(18),
+                    topRight: const Radius.circular(18),
+                    bottomLeft: Radius.circular(isUser ? 18 : 4),
+                    bottomRight: Radius.circular(isUser ? 4 : 18),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: SelectableText(
+                  chat.message,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: isUser ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }),
+    ),
 
-                  final chat = controller.chat[index];
-                  final isUser = chat.role == "user";
-
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    alignment: isUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
+    // Template Questions Section (DIPINDAH KE SINI)
+    Container(
+      height: 50,
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Padding(
+          //   padding: const EdgeInsets.all(12.0),
+          //   child: Text(
+          //     "Pertanyaan Cepat:",
+          //     style: GoogleFonts.poppins(
+          //       fontSize: 14,
+          //       fontWeight: FontWeight.w500,
+          //       color: Colors.grey[700],
+          //     ),
+          //   ),
+          // ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: templateQuestions.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.only(right: 8,top: 8 ,bottom: 8),
+                  child: InkWell(
+                    onTap: () =>
+                        _sendTemplateQuestion(templateQuestions[index]),
+                    borderRadius: BorderRadius.circular(20),
                     child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.75,
-                      ),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
-                        vertical: 10,
+                        vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: isUser ? colorApp().primery : Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(18),
-                          topRight: const Radius.circular(18),
-                          bottomLeft: Radius.circular(isUser ? 18 : 4),
-                          bottomRight: Radius.circular(isUser ? 4 : 18),
+                        color: colorApp().primery.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: colorApp().primery.withOpacity(0.3),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
+                      ),
+                      child: Center(
+                        child: Text(
+                          templateQuestions[index],
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: colorApp().primery,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      ),
-                      child: SelectableText(
-                        chat.message,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: isUser ? Colors.white : Colors.black87,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            }),
-          ),
-
-          // Input Section
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: TextField(
-                      controller: textController,
-                      decoration: InputDecoration(
-                        hintText: "Ketik pesan...",
-                        hintStyle: GoogleFonts.poppins(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.emoji_emotions_outlined,
-                            color: Colors.grey[600],
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                      maxLines: null,
-                      textCapitalization: TextCapitalization.sentences,
-                      onSubmitted: (value) => _sendMessage(),
-                      enabled: !controller.isLoading.value,
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Obx(
-                  () => Container(
-                    decoration: BoxDecoration(
-                      color: controller.isLoading.value
-                          ? Colors.grey
-                          : colorApp().primery,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: controller.isLoading.value
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Icon(Icons.send, color: Colors.white),
-                      onPressed: controller.isLoading.value
-                          ? null
-                          : () => _sendMessage(),
-                    ),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],
       ),
-    );
+    ),
+
+    // Input Section (tetap di paling bawah)
+    Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: TextField(
+                controller: textController,
+                decoration: InputDecoration(
+                  hintText: "Ketik pesan...",
+                  hintStyle: GoogleFonts.poppins(
+                    color: Colors.grey[500],
+                    fontSize: 14,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                ),
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                onSubmitted: (value) => _sendMessage(),
+                enabled: !controller.isLoading.value,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Obx(
+            () => Container(
+              decoration: BoxDecoration(
+                color: controller.isLoading.value
+                    ? Colors.grey
+                    : colorApp().primery,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: controller.isLoading.value
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Icon(Icons.send, color: Colors.white),
+                onPressed: controller.isLoading.value
+                    ? null
+                    : () => _sendMessage(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  ],
+),
+ );
   }
 
   void _sendTemplateQuestion(String question) {

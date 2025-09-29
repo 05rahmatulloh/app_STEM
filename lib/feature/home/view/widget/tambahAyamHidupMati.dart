@@ -291,6 +291,7 @@ class tambahAyam extends StatelessWidget {
               child: Text(
                 "Kandang",
                 style: GoogleFonts.roboto(
+                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                 ),
