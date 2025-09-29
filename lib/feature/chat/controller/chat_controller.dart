@@ -14,7 +14,7 @@ class ChatController extends GetxController {
   Rx<String> prompt = "".obs;
   Rx<String> topic = "".obs; // Masih Bersifat Opsional
   Rx<int> idSession = 0.obs;
-  Rx<ChatModel> chat = ChatModel(id: "", message: "").obs;
+  RxList<ChatModel> chat = <ChatModel>[].obs;
 
   final String urlApiChat = api().baseApiChat;
 
@@ -24,6 +24,13 @@ class ChatController extends GetxController {
   /// atau langsung dimasuka atau mengubah bagian variabel chat.
 
   Future<Map<String, dynamic>> sendMessage() async {
+    chat.add(
+      ChatModel(
+        id: idSession.value.toString(),
+        message: prompt.value,
+        role: "user",
+      ),
+    );
     final uri = Uri.parse(urlApiChat);
     try {
       final respone = await http.post(
@@ -37,13 +44,22 @@ class ChatController extends GetxController {
 
       if (respone.statusCode == 200) {
         /// [ERROR] Tipe data yang ada di bagian respone.body adalah String belum di cek lagi.
+        /// [FIX] Bagian error karena string terjadi karena data yang diberikan oleh api masih berbentuk json atau bentukanya string.
         /// Mengambil data json.
-        final data = ChatModel.fromJson(respone.body);
-        chat.value = data;
+        final data = ChatModel.fromJson(
+          Map<String, dynamic>.from(
+            (respone.body.isNotEmpty) ? (respone.body as Map) : {},
+          )..addAll({"role": "user"}),
+        );
 
-        /// Dibaigan resturn masih belum tau yang penting ada dulu buat menghilangkan warna merah.
+        /// Data akan dimasukan kedalam list sebagai tempat penyimpanan.
+        chat.add(data);
+
+        /// Pemberian informasi bahwa data berhasil di ambil.
+
         return {"error": false, "message": "Success", "data": data};
       } else {
+        /// Errir Handling terjadi jika terjadi kesalahan atau masalah di bagian API.
         return {
           "error": true,
           "message": "Failed to load data from API",
